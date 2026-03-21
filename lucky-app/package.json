@@ -1,0 +1,25 @@
+{
+  "name": "lucky",
+  "version": "1.0.0",
+  "description": "A web application that allows users to express their feelings and provides responses, poems, color palettes, and activities.",
+  "main": "src/index.html",
+  "scripts": {
+    "start": "live-server src",
+    "build": "echo 'Build step can be added here'"
+  },
+  "keywords": [
+    "feelings",
+    "poems",
+    "color palettes",
+    "activities",
+    "Gemini API"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.1"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
+}

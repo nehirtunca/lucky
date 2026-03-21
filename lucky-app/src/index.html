@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUCKY - Duygularınızı İfade Edin</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>LUCKY</h1>
+            <p>Duygularınızı ifade edin ve öneriler alın!</p>
+        </header>
+        <main>
+            <section class="feeling-input">
+                <h2>Duygunuzu Paylaşın</h2>
+                <form id="feelingForm">
+                    <textarea id="feelingInput" placeholder="Duygularınızı buraya yazın..." required></textarea>
+                    <button type="submit">Gönder</button>
+                </form>
+            </section>
+            <section class="responses">
+                <h2>Gemini API Yanıtı</h2>
+                <div id="apiResponse"></div>
+            </section>
+            <section class="poem">
+                <h2>Duyguya Özel Şiir</h2>
+                <div id="poemOutput"></div>
+            </section>
+            <section class="color-palette">
+                <h2>Renk Paleti Önerileri</h2>
+                <div id="colorPalette"></div>
+            </section>
+            <section class="activities">
+                <h2>Küçük Aktivite Önerileri</h2>
+                <div id="activitySuggestions"></div>
+            </section>
+            <section class="support-line">
+                <h2>Destek Hattı</h2>
+                <p>Riskli durumlar için lütfen <strong>182/112</strong> numaralı destek hattını arayın.</p>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
