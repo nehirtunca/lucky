@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUCKY - Ruh Hâli Asistanı</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">✨ LUCKY</h1>
+            <p class="subtitle">Ruh Hâlin Benim Rehberim</p>
+        </header>
+
+        <main class="main-content">
+            <section class="input-section">
+                <label for="mood-input" class="label">Şu an nasıl hissediyorsun?</label>
+                <textarea 
+                    id="mood-input" 
+                    class="mood-textarea" 
+                    placeholder="Duygularını buraya yaz... (Örn: Bugün çok yoruldum, kendimi bunalmış hissediyorum.)"
+                    maxlength="500"
+                ></textarea>
+                <div class="char-count">
+                    <span id="char-count">0</span>/500
+                </div>
+                <button id="submit-btn" class="submit-btn">LUCKY'e Anlat</button>
+            </section>
+
+            <section id="results" class="results-section hidden">
+                <div class="result-card poem-card">
+                    <h2 class="result-title">🎭 Şiir</h2>
+                    <p id="poem-result" class="poem-text"></p>
+                </div>
+
+                <div class="result-card response-card">
+                    <h2 class="result-title">💬 Anlayış</h2>
+                    <p id="response-result" class="response-text"></p>
+                </div>
+
+                <div class="result-card palette-card">
+                    <h2 class="result-title">🎨 Renk Paleti</h2>
+                    <div id="palette-result" class="color-palette"></div>
+                </div>
+
+                <div class="result-card activity-card">
+                    <h2 class="result-title">🌟 Aktivite Önerisi</h2>
+                    <p id="activity-result" class="activity-text"></p>
+                </div>
+            </section>
+
+            <section id="risk-alert" class="risk-alert hidden">
+                <div class="alert-content">
+                    <h3>⚠️ Destek Alabilirsin</h3>
+                    <p>Zor zamanlar geçiriyorsan lütfen yardım istemekten çekinme:</p>
+                    <div class="support-info">
+                        <p class="support-number">📞 <strong>182 / 112</strong></p>
+                        <p class="support-text">Türkiye Psikolojik Destek Hattı — 7/24 Açık</p>
+                    </div>
+                    <p class="support-message">Yalnız olmadığını bilmeni istiyorum. 💙</p>
+                </div>
+            </section>
+
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <p>LUCKY seni dinliyor...</p>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>LUCKY — Gemini Yapay Zekâsı ile Desteklenmektedir</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
