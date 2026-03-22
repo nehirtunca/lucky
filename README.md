@@ -1,4 +1,3 @@
-
 # LUCKY 🐾
 
 ## Problem
@@ -12,14 +11,15 @@ karşılık veren, ruh haline özel şiir ve renk paleti üreten,
 küçük bir aktivite öneren dijital bir dost.
 
 ## Canlı Demo
-Yayın Linki: https://nehirtunca.github.io/lucky
+Yayın Linki: https://fluffy-jalebi-caecce.netlify.app
 Demo Video: (yakında eklenecek)
 
 ## Kullanılan Teknolojiler
 - HTML5
 - CSS3
 - Vanilla JavaScript
-- Gemini API
+- Groq API (LLaMA 3.3)
+- Netlify Functions
 
 ## Nasıl Çalışır?
 1. Nasıl hissettiğini yaz
