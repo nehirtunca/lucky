@@ -1,6 +1,3 @@
-const API_KEY = 'GROQ_API_KEY_HERE';
-const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-
 const moodInput = document.getElementById('mood-input');
 const submitBtn = document.getElementById('submit-btn');
 const charCount = document.getElementById('char-count');
@@ -21,81 +18,25 @@ function updateCharCount() {
 async function handleSubmit() {
     const mood = moodInput.value.trim();
     if (!mood) { alert('Lütfen duygularını yaz'); return; }
-    if (!API_KEY || API_KEY === 'buraya_groq_anahtarını_yapıştır') {
-        alert('Lütfen API anahtarını ekle!'); return;
-    }
+    
     showLoading(true);
     resultsSection.classList.add('hidden');
     riskAlert.classList.add('hidden');
+    
     try {
-        const response = await callGroqAPI(mood);
-        displayResults(response);
+        const response = await fetch('/.netlify/functions/ask-lucky', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mood })
+        });
+        const data = await response.json();
+        displayResults(parseResponse(data.result));
     } catch (error) {
-        console.error('API Error:', error);
+        console.error('Hata:', error);
         alert('Bir hata oluştu. Lütfen tekrar dene.');
     } finally {
         showLoading(false);
     }
-}
-
-async function callGroqAPI(mood) {
-    const prompt = `Bir kişinin şu anda hissettiği: "${mood}"
-
-Lütfen aşağıdakileri Türkçe olarak sağla:
-
-1. ŞİİR: Ruh haline uygun, samimi ve 4-6 satırlık bir şiir yaz.
-2. ANLAYIŞ: Kişinin duygularını yargılamadan, anlayışlı bir cevap ver (2-3 cümle).
-3. RENKLER: Ruh haline uygun 4 renk öner. Format: "#HEX_KOD|Renk Adı" şeklinde.
-4. AKTİVİTE: Ruh haline uygun, kısa bir aktivite öner (1-2 cümle).
-5. RİSK: Mesajda intihar, ölüm, zarar gibi tehlikeli ifadeler varsa "EVET", yoksa "HAYIR" yaz.
-
-Format:
----
-ŞİİR:
-[şiir metni]
----
-ANLAYIŞ:
-[anlayış cevabı]
----
-RENKLER:
-[renk1]
-[renk2]
-[renk3]
-[renk4]
----
-AKTİVİTE:
-[aktivite önerisi]
----
-RİSK:
-[EVET/HAYIR]
----`;
-
-    const response = await fetch(GROQ_API_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${API_KEY}`
-        },
-        body: JSON.stringify({
-            model: 'llama-3.3-70b-versatile',
-            messages: [
-                {
-                    role: 'system',
-                    content: 'Sen çok bilge, şefkatli ve anlayışlı bir dostsun. Türkçe yanıt veriyorsun. Yargılamadan, sıcak bir dille karşılık veriyorsun.'
-                },
-                {
-                    role: 'user',
-                    content: prompt
-                }
-            ],
-            max_tokens: 1000,
-            temperature: 0.8
-        })
-    });
-
-    if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
-    const data = await response.json();
-    return parseResponse(data.choices[0].message.content);
 }
 
 function parseResponse(text) {
