@@ -17,6 +17,148 @@ function applyAccessibility() {
     closeModal();
 }
 
+// Mini Destek Kartları
+const supportCards = {
+    tr: {
+        anxiety: [
+            { text: "Kaygı bazen çok ağır gelebilir. İstersen birlikte kısa bir nefes egzersizi yapabiliriz 🌿", action: "Nefes egzersizi", type: "breath" },
+            { text: "Şu an bunaltıcı hissedebilir. Küçük bir mola vermek iyi gelebilir 💛", action: "Tamam", type: "close" },
+            { text: "Kaygıyla baş etmek zor. Ama şu an burada ve güvende olduğunu hatırlatmak istedim 🤍", action: "Teşekkürler", type: "close" }
+        ],
+        sadness: [
+            { text: "Üzgün hissetmek tamamen normal. Biraz zaman ayırman iyi gelebilir 🌧️", action: "Tamam", type: "close" },
+            { text: "Bazen sadece oturup hissetmek yeterli. Acele etmene gerek yok 💙", action: "Anladım", type: "close" },
+            { text: "Zor günler geçiyor gibi görünüyor. İstersen nefes egzersizi deneyelim mi? 🌿", action: "Deneyelim", type: "breath" }
+        ],
+        stress: [
+            { text: "Stres çok yorucu olabilir. Birkaç dakika durup nefes almak iyi gelebilir 🧘", action: "Nefes egzersizi", type: "breath" },
+            { text: "Her şeyi bir anda çözmek zorunda değilsin. Adım adım ilerleyebilirsin 🌱", action: "Tamam", type: "close" },
+            { text: "Şu an çok yoğunsun gibi görünüyor. Küçük bir mola hak ediyorsun 💛", action: "Anladım", type: "close" }
+        ]
+    },
+    en: {
+        anxiety: [
+            { text: "Anxiety can feel really heavy sometimes. Want to try a short breathing exercise together? 🌿", action: "Let's breathe", type: "breath" },
+            { text: "It's okay to feel overwhelmed. Taking a small break might help 💛", action: "Okay", type: "close" },
+            { text: "You're doing your best, and that's enough. You're safe right now 🤍", action: "Thank you", type: "close" }
+        ],
+        sadness: [
+            { text: "Feeling sad is completely valid. Give yourself some time 🌧️", action: "Okay", type: "close" },
+            { text: "Sometimes just sitting with your feelings is enough. No rush 💙", action: "Got it", type: "close" },
+            { text: "Tough days happen. Want to try a breathing exercise? 🌿", action: "Let's try", type: "breath" }
+        ],
+        stress: [
+            { text: "Stress can be exhausting. A few minutes of breathing might help 🧘", action: "Breathing exercise", type: "breath" },
+            { text: "You don't have to solve everything at once. One step at a time 🌱", action: "Okay", type: "close" },
+            { text: "Looks like you're carrying a lot right now. You deserve a small break 💛", action: "Got it", type: "close" }
+        ]
+    }
+};
+
+let lastShownCard = null;
+let breathingInterval = null;
+
+function detectSupportType(text) {
+    const lower = text.toLowerCase();
+    const anxietyWords = ['kaygı', 'endişe', 'korku', 'panik', 'anxiety', 'worried', 'scared', 'panic', 'nervous'];
+    const sadWords = ['üzgün', 'mutsuz', 'ağlamak', 'yas', 'özlem', 'sad', 'cry', 'miss', 'depressed', 'lonely'];
+    const stressWords = ['stres', 'yorgun', 'bunalmış', 'baskı', 'stress', 'tired', 'overwhelmed', 'pressure', 'exhausted'];
+
+    if (anxietyWords.some(w => lower.includes(w))) return 'anxiety';
+    if (sadWords.some(w => lower.includes(w))) return 'sadness';
+    if (stressWords.some(w => lower.includes(w))) return 'stress';
+    return null;
+}
+
+function showSupportCard(mood) {
+    if (document.body.classList.contains('reduce-motion')) return;
+    
+    const type = detectSupportType(mood);
+    if (!type) return;
+
+    const cards = supportCards[currentLang][type];
+    let card;
+    do {
+        card = cards[Math.floor(Math.random() * cards.length)];
+    } while (card === lastShownCard && cards.length > 1);
+    lastShownCard = card;
+
+    document.getElementById('support-card-text').textContent = card.text;
+    const btn = document.getElementById('support-card-action');
+    btn.textContent = card.action;
+    btn.dataset.type = card.type;
+
+    const supportCard = document.getElementById('support-card');
+    supportCard.classList.remove('hidden');
+
+    setTimeout(() => {
+        if (!supportCard.classList.contains('hidden')) {
+            closeSupportCard();
+        }
+    }, 12000);
+}
+
+function closeSupportCard() {
+    document.getElementById('support-card').classList.add('hidden');
+}
+
+function handleSupportAction() {
+    const type = document.getElementById('support-card-action').dataset.type;
+    closeSupportCard();
+    if (type === 'breath') {
+        openBreathExercise();
+    }
+}
+
+// Nefes Egzersizi
+function openBreathExercise() {
+    document.getElementById('breath-popup').classList.remove('hidden');
+    const t = currentLang === 'tr';
+    document.getElementById('breath-title').textContent = t ? '🌿 Birlikte Nefes Alalım' : '🌿 Let\'s Breathe Together';
+    document.getElementById('breath-text').textContent = t ? 'Hazır mısın?' : 'Ready?';
+    document.getElementById('breath-instruction').textContent = t 
+        ? 'Başlatmak için butona bas. 4 saniye nefes al, 4 saniye tut, 4 saniye ver.' 
+        : 'Press start. Inhale for 4 seconds, hold for 4, exhale for 4.';
+    document.getElementById('breath-start-btn').textContent = t ? 'Başlat' : 'Start';
+}
+
+function closeBreathExercise() {
+    document.getElementById('breath-popup').classList.add('hidden');
+    if (breathingInterval) {
+        clearInterval(breathingInterval);
+        breathingInterval = null;
+    }
+}
+
+function startBreathing() {
+    const circle = document.getElementById('breath-circle');
+    const text = document.getElementById('breath-text');
+    const btn = document.getElementById('breath-start-btn');
+    const t = currentLang === 'tr';
+    
+    btn.style.display = 'none';
+    let phase = 0;
+    const phases = t 
+        ? ['Nefes al... 🌬️', 'Tut... ⏸️', 'Nefes ver... 🌿', 'Tut... ⏸️']
+        : ['Inhale... 🌬️', 'Hold... ⏸️', 'Exhale... 🌿', 'Hold... ⏸️'];
+    
+    const classes = ['inhale', '', 'exhale', ''];
+
+    function runPhase() {
+        circle.className = 'breath-circle ' + classes[phase];
+        text.textContent = phases[phase];
+        phase = (phase + 1) % 4;
+    }
+
+    runPhase();
+    breathingInterval = setInterval(runPhase, 4000);
+
+    setTimeout(() => {
+        closeBreathExercise();
+        btn.style.display = 'block';
+    }, 48000);
+}
+
 // Duygu Efektleri
 function detectMoodType(text) {
     const positive = ['mutlu', 'sevinç', 'harika', 'güzel', 'umutlu', 'heyecanlı', 'neşeli', 'iyi', 'mükemmel', 'happy', 'excited', 'great', 'wonderful', 'hopeful', 'joy'];
@@ -39,7 +181,6 @@ function triggerMoodEffect(moodType) {
     body.classList.add(`mood-${moodType}`);
 
     const count = moodType === 'positive' ? 30 : moodType === 'negative' ? 40 : 15;
-    
     for (let i = 0; i < count; i++) {
         setTimeout(() => createParticle(moodType), i * 80);
     }
@@ -101,44 +242,6 @@ const translations = {
         footerText: 'LUCKY — Yapay Zekâ ile Desteklenmektedir',
         alertEmpty: 'Lütfen duygularını yaz.',
         alertError: 'Bir hata oluştu. Lütfen tekrar dene.',
-        systemPrompt: 'Sen çok bilge, şefkatli ve anlayışlı bir dostsun. Yalnızca Türkçe yanıt veriyorsun. Yargılamadan, sıcak bir dille karşılık veriyorsun. Yanıtında kesinlikle başka dil kullanma.',
-        userPrompt: (mood) => `Bir kişinin şu anda hissettiği: "${mood}"
-
-Lütfen aşağıdakileri YALNIZCA Türkçe olarak sağla:
-
-1. ŞİİR: Ruh haline uygun, samimi ve 4-6 satırlık bir şiir yaz.
-2. ANLAYIŞ: Kişinin duygularını yargılamadan, anlayışlı bir cevap ver (2-3 cümle).
-3. RENKLER: Ruh haline uygun 4 renk öner. Format: "#HEX_KOD|Renk Adı" şeklinde. Renk adları Türkçe olsun.
-4. AKTİVİTE: Aşağıdaki kategorilerden FARKLI 3 aktivite öner. Her biri yeni satırda ve emojisiyle başlasın:
-   - 🏃 Fiziksel (yürüyüş, yoga, esneme)
-   - 🧠 Zihinsel (bulmaca, okuma, yazma)
-   - 👥 Sosyal (arkadaşla konuşma, etkinlik)
-   - 🎨 Yaratıcı (çizim, müzik, içerik üretimi)
-   - 🧘 Dinlendirici (meditasyon, nefes egzersizi)
-5. RİSK: Mesajda intihar, ölüm, zarar gibi tehlikeli ifadeler varsa "EVET", yoksa "HAYIR" yaz.
-
-Format:
----
-ŞİİR:
-[şiir metni]
----
-ANLAYIŞ:
-[anlayış cevabı]
----
-RENKLER:
-[renk1]
-[renk2]
-[renk3]
-[renk4]
----
-AKTİVİTE:
-[aktivite 1]
-[aktivite 2]
-[aktivite 3]
----
-RİSK:
-[EVET/HAYIR]
----`
     },
     en: {
         modalTitle: 'Would you like to personalize your experience?',
@@ -166,44 +269,6 @@ RİSK:
         footerText: 'LUCKY — Powered by AI',
         alertEmpty: 'Please write how you feel.',
         alertError: 'Something went wrong. Please try again.',
-        systemPrompt: 'You are a wise, compassionate and understanding friend. You only respond in English. You are warm and non-judgmental. Never use any other language in your response.',
-        userPrompt: (mood) => `A person is currently feeling: "${mood}"
-
-Please provide the following ONLY in English:
-
-1. POEM: Write a sincere 4-6 line poem matching their mood.
-2. UNDERSTANDING: Give a warm, non-judgmental response (2-3 sentences).
-3. COLORS: Suggest 4 colors matching their mood. Format: "#HEX_CODE|Color Name" one per line.
-4. ACTIVITY: Suggest 3 different activities from DIFFERENT categories. Each on a new line with its emoji:
-   - 🏃 Physical (walking, yoga, stretching)
-   - 🧠 Mental (puzzle, reading, journaling)
-   - 👥 Social (call a friend, join an event)
-   - 🎨 Creative (drawing, music, writing)
-   - 🧘 Relaxing (meditation, breathing, rest)
-5. RISK: If the message contains dangerous expressions like suicide, death, self-harm write "YES", otherwise write "NO".
-
-Format:
----
-POEM:
-[poem text]
----
-UNDERSTANDING:
-[understanding response]
----
-COLORS:
-[color1]
-[color2]
-[color3]
-[color4]
----
-ACTIVITY:
-[activity 1]
-[activity 2]
-[activity 3]
----
-RISK:
-[YES/NO]
----`
     }
 };
 
@@ -256,7 +321,11 @@ moodInput.addEventListener('keydown', (e) => {
 });
 
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Escape') {
+        closeModal();
+        closeSupportCard();
+        closeBreathExercise();
+    }
 });
 
 function updateCharCount() {
@@ -268,7 +337,6 @@ async function handleSubmit() {
     const t = translations[currentLang];
     if (!mood) { alert(t.alertEmpty); return; }
 
-    // Duygu efektini tetikle
     const moodType = detectMoodType(mood);
     triggerMoodEffect(moodType);
 
@@ -284,6 +352,10 @@ async function handleSubmit() {
         });
         const data = await response.json();
         displayResults(parseResponse(data.result));
+
+        // Destek kartını göster
+        setTimeout(() => showSupportCard(mood), 2000);
+
     } catch (error) {
         console.error('Hata:', error);
         alert(t.alertError);
