@@ -15,23 +15,23 @@
             <p class="modal-subtitle">Bu adımı atlayabilirsiniz. Ayarlar daha sonra da değiştirilebilir.</p>
             
             <div class="accessibility-options">
-                <label class="acc-option">
+                <label class="acc-option" for="opt-font">
                     <input type="checkbox" id="opt-font" aria-label="Yazı boyutunu büyüt">
                     <span>🔤 Yazı boyutunu büyüt</span>
                 </label>
-                <label class="acc-option">
+                <label class="acc-option" for="opt-contrast">
                     <input type="checkbox" id="opt-contrast" aria-label="Yüksek kontrast modu">
                     <span>🌗 Yüksek kontrast modu</span>
                 </label>
-                <label class="acc-option">
+                <label class="acc-option" for="opt-anim">
                     <input type="checkbox" id="opt-anim" aria-label="Animasyonları azalt">
                     <span>⏸️ Animasyonları azalt</span>
                 </label>
-                <label class="acc-option">
+                <label class="acc-option" for="opt-simple">
                     <input type="checkbox" id="opt-simple" aria-label="Basitleştirilmiş arayüz">
                     <span>🧩 Basitleştirilmiş arayüz</span>
                 </label>
-                <label class="acc-option">
+                <label class="acc-option" for="opt-reader">
                     <input type="checkbox" id="opt-reader" aria-label="Ekran okuyucu modu">
                     <span>🔊 Ekran okuyucu modu</span>
                 </label>
@@ -76,22 +76,27 @@
             </section>
 
             <section id="results" class="results-section hidden" aria-live="polite" aria-label="LUCKY'in yanıtları">
-                <div class="result-card poem-card" role="article">
-                    <h2 class="result-title" id="title-poem">🎭 Şiir</h2>
-                    <p id="poem-result" class="poem-text" aria-label="Şiir"></p>
-                </div>
+
                 <div class="result-card response-card" role="article">
                     <h2 class="result-title" id="title-response">💬 Anlayış</h2>
                     <p id="response-result" class="response-text" aria-label="Anlayış mesajı"></p>
                 </div>
-                <div class="result-card palette-card" role="article">
-                    <h2 class="result-title" id="title-palette">🎨 Renk Paleti</h2>
-                    <div id="palette-result" class="color-palette" aria-label="Renk paleti"></div>
-                </div>
+
                 <div class="result-card activity-card" role="article">
                     <h2 class="result-title" id="title-activity">🌟 Aktivite Önerisi</h2>
                     <p id="activity-result" class="activity-text" aria-label="Aktivite önerisi"></p>
                 </div>
+
+                <div class="result-card palette-card" role="article">
+                    <h2 class="result-title" id="title-palette">🎨 Renk Paleti</h2>
+                    <div id="palette-result" class="color-palette" aria-label="Renk paleti"></div>
+                </div>
+
+                <div class="result-card poem-card" role="article">
+                    <h2 class="result-title" id="title-poem">🎭 Şiir</h2>
+                    <p id="poem-result" class="poem-text" aria-label="Şiir"></p>
+                </div>
+
             </section>
 
             <section id="risk-alert" class="risk-alert hidden" role="alert" aria-live="assertive">
