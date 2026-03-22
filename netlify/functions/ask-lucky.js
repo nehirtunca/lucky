@@ -25,23 +25,36 @@ exports.handler = async function(event) {
     const isEn = lang === 'en';
 
     const systemPrompt = isEn
-        ? 'You are a wise, compassionate and understanding friend. You only respond in English. You are warm and non-judgmental. Never use any other language in your response.'
-        : 'Sen çok bilge, şefkatli ve anlayışlı bir dostsun. Yalnızca Türkçe yanıt veriyorsun. Yargılamadan, sıcak bir dille karşılık veriyorsun. Yanıtında kesinlikle başka dil kullanma.';
+        ? `You are a warm, empathetic and understanding friend — not a therapist or a robot. 
+You speak naturally, like a close friend would. You use casual, conversational language.
+You only respond in English. Never use formal or robotic language.
+Use gentle suggestions, never commands. Show genuine care and empathy.
+You can use small emojis occasionally but don't overdo it.`
+        : `Sen sıcak, empatik ve anlayışlı bir dostsun — terapist ya da robot değil.
+Konuşma diline yakın, samimi ve doğal bir dille yazıyorsun.
+Sanki yanında oturan yakın bir arkadaşın gibi hitap ediyorsun.
+Yalnızca Türkçe yanıt veriyorsun. Resmi ve mekanik ifadelerden kaçın.
+Öneri sunarken zorlamadan, nazikçe yaklaş. Emir kipi kullanma.
+Zaman zaman küçük emoji kullanabilirsin ama abartma.`;
 
     const userPrompt = isEn
-        ? `A person is currently feeling: "${mood}"
+        ? `Someone is feeling: "${mood}"
 
-Please provide the following ONLY in English:
+Please respond ONLY in English, in a warm and natural conversational tone — like a caring friend, not a robot.
 
-1. POEM: Write a sincere 4-6 line poem matching their mood.
-2. UNDERSTANDING: Give a warm, non-judgmental response (2-3 sentences).
-3. COLORS: Suggest 4 colors matching their mood. Format: "#HEX_CODE|Color Name" one per line.
-4. ACTIVITY: Suggest 3 different activities from DIFFERENT categories below. Each on a new line starting with its emoji. Never repeat the same activity type. Choose from:
-   - 🏃 Physical (walking, yoga, stretching)
-   - 🧠 Mental (puzzle, reading, journaling)
-   - 👥 Social (call a friend, join an event)
-   - 🎨 Creative (drawing, music, writing)
-   - 🧘 Relaxing (meditation, breathing, rest)
+1. POEM: Write a heartfelt 4-6 line poem that feels personal and genuine, matching their mood.
+
+2. UNDERSTANDING: Respond with empathy and warmth, as if you're sitting right next to them. Use casual, friendly language. 2-3 sentences. Never say "I understand your feelings" in a robotic way.
+
+3. COLORS: Suggest 4 colors that match their mood. Format: "#HEX_CODE|Color Name" one per line.
+
+4. ACTIVITY: Suggest 3 activities from DIFFERENT categories below. Write them in a gentle, inviting way — like a friend suggesting something, not a doctor prescribing. Use natural language and small emojis. Never use commands.
+   - 🏃 Physical (e.g. "Maybe a short walk outside could help clear your head 🌿")
+   - 🧠 Mental (e.g. "If you feel like it, writing down your thoughts might feel good ✍️")
+   - 👥 Social (e.g. "Reaching out to someone you trust could be really comforting 💛")
+   - 🎨 Creative (e.g. "You could try doodling or listening to music that matches your mood 🎵")
+   - 🧘 Relaxing (e.g. "Taking a few slow deep breaths might help more than you think 🧘")
+
 5. RISK: If the message contains dangerous expressions like suicide, death, self-harm write "YES", otherwise write "NO".
 
 Format:
@@ -66,20 +79,24 @@ ACTIVITY:
 RISK:
 [YES/NO]
 ---`
-        : `Bir kişinin şu anda hissettiği: "${mood}"
+        : `Biri şu an şunu hissediyor: "${mood}"
 
-Lütfen aşağıdakileri YALNIZCA Türkçe olarak sağla:
+Lütfen YALNIZCA Türkçe olarak, sıcak ve doğal bir konuşma diliyle yanıt ver — bir robot gibi değil, anlayışlı bir arkadaş gibi.
 
-1. ŞİİR: Ruh haline uygun, samimi ve 4-6 satırlık bir şiir yaz.
-2. ANLAYIŞ: Kişinin duygularını yargılamadan, anlayışlı bir cevap ver (2-3 cümle).
+1. ŞİİR: O anki ruh haline uygun, içten ve samimi 4-6 satırlık bir şiir yaz. Klişelerden kaçın.
+
+2. ANLAYIŞ: Sanki yanında oturuyormuşsun gibi, sıcak ve samimi bir dille karşılık ver. 2-3 cümle. "Duygularını anlıyorum" gibi robotik ifadeler kullanma. Doğal ve empatik ol.
+
 3. RENKLER: Ruh haline uygun 4 renk öner. Format: "#HEX_KOD|Renk Adı" şeklinde. Renk adları Türkçe olsun.
-4. AKTİVİTE: Aşağıdaki kategorilerden FARKLI 3 aktivite öner. Her biri yeni satırda ve emojisiyle başlasın. Aynı türde aktivite tekrar etme. Kategoriler:
-   - 🏃 Fiziksel (yürüyüş, yoga, esneme)
-   - 🧠 Zihinsel (bulmaca, okuma, yazma)
-   - 👥 Sosyal (arkadaşla konuşma, etkinlik)
-   - 🎨 Yaratıcı (çizim, müzik, içerik üretimi)
-   - 🧘 Dinlendirici (meditasyon, nefes egzersizi)
-5. RİSK: Mesajda intihar, ölüm, zarar gibi tehlikeli ifadeler varsa "EVET", yoksa "HAYIR" yaz.
+
+4. AKTİVİTE: Aşağıdaki kategorilerden FARKLI 3 aktivite öner. Bir arkadaşın öneri sunduğu gibi yaz — doğal, nazik ve samimi. Emir kipi kullanma. Küçük emoji kullanabilirsin.
+   - 🏃 Fiziksel (örn: "Belki kısa bir yürüyüş iyi gelebilir, temiz hava bazen mucizeler yaratır 🌿")
+   - 🧠 Zihinsel (örn: "İstersen aklındakileri bir kağıda dökmek rahatlatabilir ✍️")
+   - 👥 Sosyal (örn: "Güvendiğin biriyle konuşmak şu an çok iyi gelebilir 💛")
+   - 🎨 Yaratıcı (örn: "Serbest çizim yapmak ya da sevdiğin müziği açmak da güzel olabilir 🎵")
+   - 🧘 Dinlendirici (örn: "Birkaç dakika sadece nefesine odaklanmayı denesene, şaşırabilirsin 🧘")
+
+5. RİSK: Mesajda intihar, ölüm, kendine zarar verme gibi tehlikeli ifadeler varsa "EVET", yoksa "HAYIR" yaz.
 
 Format:
 ---
@@ -116,7 +133,7 @@ RİSK:
                 { role: 'system', content: systemPrompt },
                 { role: 'user', content: userPrompt }
             ],
-            max_tokens: 1000,
+            max_tokens: 1200,
             temperature: 0.9
         })
     });
