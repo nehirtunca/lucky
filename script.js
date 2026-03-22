@@ -1,7 +1,36 @@
+// Erişilebilirlik Fonksiyonları
+function openModal() {
+    document.getElementById('accessibility-modal').style.display = 'flex';
+}
+
+function closeModal() {
+    document.getElementById('accessibility-modal').style.display = 'none';
+}
+
+function applyAccessibility() {
+    const body = document.body;
+    body.classList.toggle('large-font', document.getElementById('opt-font').checked);
+    body.classList.toggle('high-contrast', document.getElementById('opt-contrast').checked);
+    body.classList.toggle('reduce-motion', document.getElementById('opt-anim').checked);
+    body.classList.toggle('simple-ui', document.getElementById('opt-simple').checked);
+    body.classList.toggle('screen-reader', document.getElementById('opt-reader').checked);
+    closeModal();
+}
+
+// Dil Sistemi
 let currentLang = 'tr';
 
 const translations = {
     tr: {
+        modalTitle: 'Deneyiminizi kişiselleştirmek ister misiniz?',
+        modalSubtitle: 'Bu adımı atlayabilirsiniz. Ayarlar daha sonra da değiştirilebilir.',
+        optFont: '🔤 Yazı boyutunu büyüt',
+        optContrast: '🌗 Yüksek kontrast modu',
+        optAnim: '⏸️ Animasyonları azalt',
+        optSimple: '🧩 Basitleştirilmiş arayüz',
+        optReader: '🔊 Ekran okuyucu modu',
+        modalSkip: 'Atla',
+        modalApply: 'Uygula',
         subtitle: 'Ruh Hâlin Benim Rehberim',
         label: 'Şu an nasıl hissediyorsun?',
         placeholder: 'Duygularını buraya yaz... (Örn: Bugün çok yoruldum, kendimi bunalmış hissediyorum.)',
@@ -51,6 +80,15 @@ RİSK:
 ---`
     },
     en: {
+        modalTitle: 'Would you like to personalize your experience?',
+        modalSubtitle: 'You can skip this step. Settings can be changed later.',
+        optFont: '🔤 Increase font size',
+        optContrast: '🌗 High contrast mode',
+        optAnim: '⏸️ Reduce animations',
+        optSimple: '🧩 Simplified interface',
+        optReader: '🔊 Screen reader mode',
+        modalSkip: 'Skip',
+        modalApply: 'Apply',
         subtitle: 'Your Mood Is My Guide',
         label: 'How are you feeling right now?',
         placeholder: 'Write your feelings here... (e.g. I feel overwhelmed today, nothing seems to go right.)',
@@ -101,10 +139,22 @@ RISK:
     }
 };
 
-function setLang(lang) {
+function setLang(lang, e) {
     currentLang = lang;
     const t = translations[lang];
 
+    // Modal metinlerini güncelle
+    document.getElementById('modal-title').textContent = t.modalTitle;
+    document.querySelector('.modal-subtitle').textContent = t.modalSubtitle;
+    document.querySelector('label[for="opt-font"] span').textContent = t.optFont;
+    document.querySelector('label[for="opt-contrast"] span').textContent = t.optContrast;
+    document.querySelector('label[for="opt-anim"] span').textContent = t.optAnim;
+    document.querySelector('label[for="opt-simple"] span').textContent = t.optSimple;
+    document.querySelector('label[for="opt-reader"] span').textContent = t.optReader;
+    document.querySelector('.modal-skip').textContent = t.modalSkip;
+    document.querySelector('.modal-apply').textContent = t.modalApply;
+
+    // Ana sayfa metinlerini güncelle
     document.getElementById('subtitle').textContent = t.subtitle;
     document.getElementById('label-text').textContent = t.label;
     document.getElementById('mood-input').placeholder = t.placeholder;
@@ -121,11 +171,11 @@ function setLang(lang) {
     document.getElementById('footer-text').textContent = t.footerText;
 
     document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
-
+    if (e && e.target) e.target.classList.add('active');
     document.documentElement.lang = lang;
 }
 
+// DOM Elements
 const moodInput = document.getElementById('mood-input');
 const submitBtn = document.getElementById('submit-btn');
 const charCount = document.getElementById('char-count');
@@ -137,6 +187,11 @@ moodInput.addEventListener('input', updateCharCount);
 submitBtn.addEventListener('click', handleSubmit);
 moodInput.addEventListener('keydown', (e) => {
     if (e.ctrlKey && e.key === 'Enter') handleSubmit();
+});
+
+// Klavye erişilebilirliği - ESC ile modal kapat
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
 });
 
 function updateCharCount() {
@@ -191,10 +246,10 @@ function parseColors(colorText) {
     const colors = [];
     colorText.split('\n').filter(l => l.trim()).forEach(line => {
         const hex = line.match(/#[0-9A-Fa-f]{6}/)?.[0] || '#D4A5D4';
-        const name = line.split('|')[1]?.trim() || 'Color';
+        const name = line.split('|')[1]?.trim() || 'Renk';
         colors.push({ hex, name });
     });
-    while (colors.length < 4) colors.push({ hex: '#D4A5D4', name: 'Color' });
+    while (colors.length < 4) colors.push({ hex: '#D4A5D4', name: 'Renk' });
     return colors.slice(0, 4);
 }
 
@@ -208,6 +263,7 @@ function displayResults(result) {
         box.className = 'color-box';
         box.style.backgroundColor = color.hex;
         box.textContent = color.name;
+        box.setAttribute('aria-label', `Renk: ${color.name}`);
         paletteDiv.appendChild(box);
     });
     document.getElementById('activity-result').textContent = result.activity;
