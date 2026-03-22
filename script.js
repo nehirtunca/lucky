@@ -17,6 +17,60 @@ function applyAccessibility() {
     closeModal();
 }
 
+// Duygu Efektleri
+function detectMoodType(text) {
+    const positive = ['mutlu', 'sevinç', 'harika', 'güzel', 'umutlu', 'heyecanlı', 'neşeli', 'iyi', 'mükemmel', 'happy', 'excited', 'great', 'wonderful', 'hopeful', 'joy'];
+    const negative = ['üzgün', 'mutsuz', 'stres', 'kaygı', 'kötü', 'yorgun', 'bunalmış', 'endişe', 'korku', 'ağlamak', 'sad', 'stressed', 'anxious', 'tired', 'overwhelmed', 'scared'];
+    
+    const lowerText = text.toLowerCase();
+    const positiveCount = positive.filter(w => lowerText.includes(w)).length;
+    const negativeCount = negative.filter(w => lowerText.includes(w)).length;
+    
+    if (positiveCount > negativeCount) return 'positive';
+    if (negativeCount > positiveCount) return 'negative';
+    return 'neutral';
+}
+
+function triggerMoodEffect(moodType) {
+    if (document.body.classList.contains('reduce-motion')) return;
+
+    const body = document.body;
+    body.classList.remove('mood-positive', 'mood-negative', 'mood-neutral');
+    body.classList.add(`mood-${moodType}`);
+
+    const count = moodType === 'positive' ? 30 : moodType === 'negative' ? 40 : 15;
+    
+    for (let i = 0; i < count; i++) {
+        setTimeout(() => createParticle(moodType), i * 80);
+    }
+}
+
+function createParticle(moodType) {
+    const particle = document.createElement('div');
+    particle.classList.add('particle', `particle-${moodType}`);
+
+    if (moodType === 'positive') {
+        const emojis = ['🌸', '✨', '🌟', '💫', '🎉', '🌺', '💛', '🌈'];
+        particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        particle.style.fontSize = `${Math.random() * 16 + 12}px`;
+        particle.style.left = `${Math.random() * 100}vw`;
+        particle.style.bottom = '0';
+        particle.style.animationDuration = `${Math.random() * 1.5 + 1}s`;
+    } else if (moodType === 'negative') {
+        particle.style.left = `${Math.random() * 100}vw`;
+        particle.style.top = '0';
+        particle.style.animationDuration = `${Math.random() * 1.5 + 0.8}s`;
+        particle.style.opacity = `${Math.random() * 0.4 + 0.2}`;
+    } else {
+        particle.style.left = `${Math.random() * 100}vw`;
+        particle.style.top = `${Math.random() * 50}vh`;
+        particle.style.animationDuration = `${Math.random() * 2 + 2}s`;
+    }
+
+    document.body.appendChild(particle);
+    setTimeout(() => particle.remove(), 3000);
+}
+
 // Dil Sistemi
 let currentLang = 'tr';
 
@@ -38,7 +92,7 @@ const translations = {
         titlePoem: '🎭 Şiir',
         titleResponse: '💬 Anlayış',
         titlePalette: '🎨 Renk Paleti',
-        titleActivity: '🌟 Aktivite Önerisi',
+        titleActivity: '🌟 Aktivite Önerileri',
         riskTitle: '⚠️ Destek Alabilirsin',
         riskText: 'Zor zamanlar geçiriyorsan lütfen yardım istemekten çekinme:',
         supportText: 'Türkiye Psikolojik Destek Hattı — 7/24 Açık',
@@ -55,7 +109,12 @@ Lütfen aşağıdakileri YALNIZCA Türkçe olarak sağla:
 1. ŞİİR: Ruh haline uygun, samimi ve 4-6 satırlık bir şiir yaz.
 2. ANLAYIŞ: Kişinin duygularını yargılamadan, anlayışlı bir cevap ver (2-3 cümle).
 3. RENKLER: Ruh haline uygun 4 renk öner. Format: "#HEX_KOD|Renk Adı" şeklinde. Renk adları Türkçe olsun.
-4. AKTİVİTE: Ruh haline uygun, kısa bir aktivite öner (1-2 cümle).
+4. AKTİVİTE: Aşağıdaki kategorilerden FARKLI 3 aktivite öner. Her biri yeni satırda ve emojisiyle başlasın:
+   - 🏃 Fiziksel (yürüyüş, yoga, esneme)
+   - 🧠 Zihinsel (bulmaca, okuma, yazma)
+   - 👥 Sosyal (arkadaşla konuşma, etkinlik)
+   - 🎨 Yaratıcı (çizim, müzik, içerik üretimi)
+   - 🧘 Dinlendirici (meditasyon, nefes egzersizi)
 5. RİSK: Mesajda intihar, ölüm, zarar gibi tehlikeli ifadeler varsa "EVET", yoksa "HAYIR" yaz.
 
 Format:
@@ -73,7 +132,9 @@ RENKLER:
 [renk4]
 ---
 AKTİVİTE:
-[aktivite önerisi]
+[aktivite 1]
+[aktivite 2]
+[aktivite 3]
 ---
 RİSK:
 [EVET/HAYIR]
@@ -96,7 +157,7 @@ RİSK:
         titlePoem: '🎭 Poem',
         titleResponse: '💬 Understanding',
         titlePalette: '🎨 Color Palette',
-        titleActivity: '🌟 Activity Suggestion',
+        titleActivity: '🌟 Activity Suggestions',
         riskTitle: '⚠️ You Can Get Support',
         riskText: 'If you are going through a hard time, please do not hesitate to ask for help:',
         supportText: 'Crisis Support Line — Available 24/7',
@@ -113,7 +174,12 @@ Please provide the following ONLY in English:
 1. POEM: Write a sincere 4-6 line poem matching their mood.
 2. UNDERSTANDING: Give a warm, non-judgmental response (2-3 sentences).
 3. COLORS: Suggest 4 colors matching their mood. Format: "#HEX_CODE|Color Name" one per line.
-4. ACTIVITY: Suggest a short activity matching their mood (1-2 sentences).
+4. ACTIVITY: Suggest 3 different activities from DIFFERENT categories. Each on a new line with its emoji:
+   - 🏃 Physical (walking, yoga, stretching)
+   - 🧠 Mental (puzzle, reading, journaling)
+   - 👥 Social (call a friend, join an event)
+   - 🎨 Creative (drawing, music, writing)
+   - 🧘 Relaxing (meditation, breathing, rest)
 5. RISK: If the message contains dangerous expressions like suicide, death, self-harm write "YES", otherwise write "NO".
 
 Format:
@@ -131,7 +197,9 @@ COLORS:
 [color4]
 ---
 ACTIVITY:
-[activity suggestion]
+[activity 1]
+[activity 2]
+[activity 3]
 ---
 RISK:
 [YES/NO]
@@ -143,7 +211,6 @@ function setLang(lang, e) {
     currentLang = lang;
     const t = translations[lang];
 
-    // Modal metinlerini güncelle
     document.getElementById('modal-title').textContent = t.modalTitle;
     document.querySelector('.modal-subtitle').textContent = t.modalSubtitle;
     document.querySelector('label[for="opt-font"] span').textContent = t.optFont;
@@ -154,7 +221,6 @@ function setLang(lang, e) {
     document.querySelector('.modal-skip').textContent = t.modalSkip;
     document.querySelector('.modal-apply').textContent = t.modalApply;
 
-    // Ana sayfa metinlerini güncelle
     document.getElementById('subtitle').textContent = t.subtitle;
     document.getElementById('label-text').textContent = t.label;
     document.getElementById('mood-input').placeholder = t.placeholder;
@@ -189,7 +255,6 @@ moodInput.addEventListener('keydown', (e) => {
     if (e.ctrlKey && e.key === 'Enter') handleSubmit();
 });
 
-// Klavye erişilebilirliği - ESC ile modal kapat
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeModal();
 });
@@ -202,6 +267,10 @@ async function handleSubmit() {
     const mood = moodInput.value.trim();
     const t = translations[currentLang];
     if (!mood) { alert(t.alertEmpty); return; }
+
+    // Duygu efektini tetikle
+    const moodType = detectMoodType(mood);
+    triggerMoodEffect(moodType);
 
     showLoading(true);
     resultsSection.classList.add('hidden');
