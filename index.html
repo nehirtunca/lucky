@@ -121,7 +121,25 @@
             <p id="footer-text">LUCKY — Yapay Zekâ ile Desteklenmektedir</p>
         </footer>
     </div>
+<!-- Mini Destek Kartı -->
+    <div id="support-card" class="support-card hidden" role="dialog" aria-live="polite">
+        <button class="support-card-close" onclick="closeSupportCard()" aria-label="Kapat">✕</button>
+        <p id="support-card-text"></p>
+        <div class="support-card-actions">
+            <button id="support-card-action" class="support-card-btn" onclick="handleSupportAction()"></button>
+        </div>
+    </div>
 
+    <!-- Nefes Egzersizi Popup -->
+    <div id="breath-popup" class="breath-popup hidden" role="dialog" aria-modal="true">
+        <button class="breath-close" onclick="closeBreathExercise()" aria-label="Kapat">✕</button>
+        <h3 id="breath-title">🌿 Birlikte Nefes Alalım</h3>
+        <div class="breath-circle" id="breath-circle">
+            <span id="breath-text">Hazır mısın?</span>
+        </div>
+        <p id="breath-instruction">Nefes egzersizi için aşağıdaki butona bas</p>
+        <button class="breath-start-btn" id="breath-start-btn" onclick="startBreathing()">Başlat</button>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
