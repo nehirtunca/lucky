@@ -1,15 +1,27 @@
 exports.handler = async function(event) {
+    if (event.httpMethod === 'OPTIONS') {
+        return {
+            statusCode: 200,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Methods': 'POST, OPTIONS'
+            },
+            body: ''
+        };
+    }
+
     const GROQ_API_KEY = process.env.GROQ_API_KEY;
     
     if (!GROQ_API_KEY) {
         return {
             statusCode: 500,
+            headers: { 'Access-Control-Allow-Origin': '*' },
             body: JSON.stringify({ error: 'API anahtarı bulunamadı' })
         };
     }
 
     const { mood, lang } = JSON.parse(event.body);
-    
     const isEn = lang === 'en';
 
     const systemPrompt = isEn
@@ -24,7 +36,12 @@ Please provide the following ONLY in English:
 1. POEM: Write a sincere 4-6 line poem matching their mood.
 2. UNDERSTANDING: Give a warm, non-judgmental response (2-3 sentences).
 3. COLORS: Suggest 4 colors matching their mood. Format: "#HEX_CODE|Color Name" one per line.
-4. ACTIVITY: Suggest a short activity matching their mood (1-2 sentences).
+4. ACTIVITY: Suggest 3 different activities from DIFFERENT categories below. Each on a new line starting with its emoji. Never repeat the same activity type. Choose from:
+   - 🏃 Physical (walking, yoga, stretching)
+   - 🧠 Mental (puzzle, reading, journaling)
+   - 👥 Social (call a friend, join an event)
+   - 🎨 Creative (drawing, music, writing)
+   - 🧘 Relaxing (meditation, breathing, rest)
 5. RISK: If the message contains dangerous expressions like suicide, death, self-harm write "YES", otherwise write "NO".
 
 Format:
@@ -42,7 +59,9 @@ COLORS:
 [color4]
 ---
 ACTIVITY:
-[activity suggestion]
+[activity 1]
+[activity 2]
+[activity 3]
 ---
 RISK:
 [YES/NO]
@@ -54,7 +73,12 @@ Lütfen aşağıdakileri YALNIZCA Türkçe olarak sağla:
 1. ŞİİR: Ruh haline uygun, samimi ve 4-6 satırlık bir şiir yaz.
 2. ANLAYIŞ: Kişinin duygularını yargılamadan, anlayışlı bir cevap ver (2-3 cümle).
 3. RENKLER: Ruh haline uygun 4 renk öner. Format: "#HEX_KOD|Renk Adı" şeklinde. Renk adları Türkçe olsun.
-4. AKTİVİTE: Ruh haline uygun, kısa bir aktivite öner (1-2 cümle).
+4. AKTİVİTE: Aşağıdaki kategorilerden FARKLI 3 aktivite öner. Her biri yeni satırda ve emojisiyle başlasın. Aynı türde aktivite tekrar etme. Kategoriler:
+   - 🏃 Fiziksel (yürüyüş, yoga, esneme)
+   - 🧠 Zihinsel (bulmaca, okuma, yazma)
+   - 👥 Sosyal (arkadaşla konuşma, etkinlik)
+   - 🎨 Yaratıcı (çizim, müzik, içerik üretimi)
+   - 🧘 Dinlendirici (meditasyon, nefes egzersizi)
 5. RİSK: Mesajda intihar, ölüm, zarar gibi tehlikeli ifadeler varsa "EVET", yoksa "HAYIR" yaz.
 
 Format:
@@ -72,7 +96,9 @@ RENKLER:
 [renk4]
 ---
 AKTİVİTE:
-[aktivite önerisi]
+[aktivite 1]
+[aktivite 2]
+[aktivite 3]
 ---
 RİSK:
 [EVET/HAYIR]
@@ -91,7 +117,7 @@ RİSK:
                 { role: 'user', content: userPrompt }
             ],
             max_tokens: 1000,
-            temperature: 0.8
+            temperature: 0.9
         })
     });
 
