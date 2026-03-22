@@ -7,57 +7,94 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <!-- Erişilebilirlik Tercih Ekranı -->
+    <div id="accessibility-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-box">
+            <h2 id="modal-title">Deneyiminizi kişiselleştirmek ister misiniz?</h2>
+            <p class="modal-subtitle">Bu adımı atlayabilirsiniz. Ayarlar daha sonra da değiştirilebilir.</p>
+            
+            <div class="accessibility-options">
+                <label class="acc-option">
+                    <input type="checkbox" id="opt-font" aria-label="Yazı boyutunu büyüt">
+                    <span>🔤 Yazı boyutunu büyüt</span>
+                </label>
+                <label class="acc-option">
+                    <input type="checkbox" id="opt-contrast" aria-label="Yüksek kontrast modu">
+                    <span>🌗 Yüksek kontrast modu</span>
+                </label>
+                <label class="acc-option">
+                    <input type="checkbox" id="opt-anim" aria-label="Animasyonları azalt">
+                    <span>⏸️ Animasyonları azalt</span>
+                </label>
+                <label class="acc-option">
+                    <input type="checkbox" id="opt-simple" aria-label="Basitleştirilmiş arayüz">
+                    <span>🧩 Basitleştirilmiş arayüz</span>
+                </label>
+                <label class="acc-option">
+                    <input type="checkbox" id="opt-reader" aria-label="Ekran okuyucu modu">
+                    <span>🔊 Ekran okuyucu modu</span>
+                </label>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="modal-skip" onclick="closeModal()" aria-label="Atla ve devam et">Atla</button>
+                <button class="modal-apply" onclick="applyAccessibility()" aria-label="Tercihleri uygula">Uygula</button>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
 
         <!-- Dil Seçimi -->
-        <div id="lang-selector" class="lang-selector">
-            <button class="lang-btn active" onclick="setLang('tr')">🇹🇷 Türkçe</button>
-            <button class="lang-btn" onclick="setLang('en')">🇬🇧 English</button>
+        <div class="lang-selector" role="navigation" aria-label="Dil seçimi">
+            <button class="lang-btn active" onclick="setLang('tr', event)" aria-label="Türkçe dil seçeneği" aria-pressed="true">🇹🇷 Türkçe</button>
+            <button class="lang-btn" onclick="setLang('en', event)" aria-label="English language option" aria-pressed="false">🇬🇧 English</button>
+            <button class="acc-settings-btn" onclick="openModal()" aria-label="Erişilebilirlik ayarları">♿</button>
         </div>
 
         <header class="header">
-            <h1 class="logo">✨ LUCKY</h1>
+            <h1 class="logo" aria-label="LUCKY - Ruh Hâli Asistanı">✨ LUCKY</h1>
             <p class="subtitle" id="subtitle">Ruh Hâlin Benim Rehberim</p>
         </header>
 
-        <main class="main-content">
-            <section class="input-section">
+        <main class="main-content" role="main">
+            <section class="input-section" aria-label="Duygu girişi">
                 <label for="mood-input" class="label" id="label-text">Şu an nasıl hissediyorsun?</label>
                 <textarea 
                     id="mood-input" 
                     class="mood-textarea" 
                     placeholder="Duygularını buraya yaz... (Örn: Bugün çok yoruldum, kendimi bunalmış hissediyorum.)"
                     maxlength="500"
+                    aria-label="Duygularını yaz"
+                    aria-describedby="char-info"
                 ></textarea>
-                <div class="char-count">
+                <div class="char-count" id="char-info" aria-live="polite">
                     <span id="char-count">0</span>/500
                 </div>
-                <button id="submit-btn" class="submit-btn">LUCKY'e Anlat</button>
+                <button id="submit-btn" class="submit-btn" aria-label="LUCKY'e anlat">LUCKY'e Anlat</button>
             </section>
 
-            <section id="results" class="results-section hidden">
-                <div class="result-card poem-card">
+            <section id="results" class="results-section hidden" aria-live="polite" aria-label="LUCKY'in yanıtları">
+                <div class="result-card poem-card" role="article">
                     <h2 class="result-title" id="title-poem">🎭 Şiir</h2>
-                    <p id="poem-result" class="poem-text"></p>
+                    <p id="poem-result" class="poem-text" aria-label="Şiir"></p>
                 </div>
-
-                <div class="result-card response-card">
+                <div class="result-card response-card" role="article">
                     <h2 class="result-title" id="title-response">💬 Anlayış</h2>
-                    <p id="response-result" class="response-text"></p>
+                    <p id="response-result" class="response-text" aria-label="Anlayış mesajı"></p>
                 </div>
-
-                <div class="result-card palette-card">
+                <div class="result-card palette-card" role="article">
                     <h2 class="result-title" id="title-palette">🎨 Renk Paleti</h2>
-                    <div id="palette-result" class="color-palette"></div>
+                    <div id="palette-result" class="color-palette" aria-label="Renk paleti"></div>
                 </div>
-
-                <div class="result-card activity-card">
+                <div class="result-card activity-card" role="article">
                     <h2 class="result-title" id="title-activity">🌟 Aktivite Önerisi</h2>
-                    <p id="activity-result" class="activity-text"></p>
+                    <p id="activity-result" class="activity-text" aria-label="Aktivite önerisi"></p>
                 </div>
             </section>
 
-            <section id="risk-alert" class="risk-alert hidden">
+            <section id="risk-alert" class="risk-alert hidden" role="alert" aria-live="assertive">
                 <div class="alert-content">
                     <h3 id="risk-title">⚠️ Destek Alabilirsin</h3>
                     <p id="risk-text">Zor zamanlar geçiriyorsan lütfen yardım istemekten çekinme:</p>
@@ -69,14 +106,14 @@
                 </div>
             </section>
 
-            <div id="loading" class="loading hidden">
-                <div class="spinner"></div>
+            <div id="loading" class="loading hidden" role="status" aria-live="polite">
+                <div class="spinner" aria-hidden="true"></div>
                 <p id="loading-text">LUCKY seni dinliyor...</p>
             </div>
         </main>
 
-        <footer class="footer">
-            <p id="footer-text">LUCKY — Gemini Yapay Zekâsı ile Desteklenmektedir</p>
+        <footer class="footer" role="contentinfo">
+            <p id="footer-text">LUCKY — Yapay Zekâ ile Desteklenmektedir</p>
         </footer>
     </div>
 
