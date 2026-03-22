@@ -1,5 +1,5 @@
-const API_KEY ='AIzaSyAxFjsJEDt4oq3GavS5nvJqc-2Ox1q5oXg'; // Buraya kendi anahtarını yapıştır!
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+const API_KEY = 'GROQ_API_KEY_HERE';
+const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
 const moodInput = document.getElementById('mood-input');
 const submitBtn = document.getElementById('submit-btn');
@@ -21,24 +21,24 @@ function updateCharCount() {
 async function handleSubmit() {
     const mood = moodInput.value.trim();
     if (!mood) { alert('Lütfen duygularını yaz'); return; }
-    if (!API_KEY || API_KEY === 'YOUR_GEMINI_API_KEY') {
+    if (!API_KEY || API_KEY === 'buraya_groq_anahtarını_yapıştır') {
         alert('Lütfen API anahtarını ekle!'); return;
     }
     showLoading(true);
     resultsSection.classList.add('hidden');
     riskAlert.classList.add('hidden');
     try {
-        const response = await callGeminiAPI(mood);
+        const response = await callGroqAPI(mood);
         displayResults(response);
     } catch (error) {
         console.error('API Error:', error);
-        alert('Bir hata oluştu. İnternet bağlantını kontrol et.');
+        alert('Bir hata oluştu. Lütfen tekrar dene.');
     } finally {
         showLoading(false);
     }
 }
 
-async function callGeminiAPI(mood) {
+async function callGroqAPI(mood) {
     const prompt = `Bir kişinin şu anda hissettiği: "${mood}"
 
 Lütfen aşağıdakileri Türkçe olarak sağla:
@@ -70,15 +70,32 @@ RİSK:
 [EVET/HAYIR]
 ---`;
 
-    const response = await fetch(`${GEMINI_API_URL}?key=${API_KEY}`, {
+    const response = await fetch(GROQ_API_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_KEY}`
+        },
+        body: JSON.stringify({
+            model: 'llama-3.3-70b-versatile',
+            messages: [
+                {
+                    role: 'system',
+                    content: 'Sen çok bilge, şefkatli ve anlayışlı bir dostsun. Türkçe yanıt veriyorsun. Yargılamadan, sıcak bir dille karşılık veriyorsun.'
+                },
+                {
+                    role: 'user',
+                    content: prompt
+                }
+            ],
+            max_tokens: 1000,
+            temperature: 0.8
+        })
     });
 
     if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
     const data = await response.json();
-    return parseResponse(data.candidates[0].content.parts[0].text);
+    return parseResponse(data.choices[0].message.content);
 }
 
 function parseResponse(text) {
@@ -126,10 +143,4 @@ function displayResults(result) {
 function showLoading(show) {
     loadingDiv.classList.toggle('hidden', !show);
     submitBtn.disabled = show;
-
 }
-document.addEventListener('mousemove', (e) => {
-    document.body.style.setProperty('--mx', e.clientX + 'px');
-    document.body.style.setProperty('--my', e.clientY + 'px');
-    const glow = document.querySelector('body::before');
-});
