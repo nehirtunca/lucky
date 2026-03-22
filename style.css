@@ -572,3 +572,63 @@ body {
     .submit-btn { font-size: 1rem; padding: 13px; }
     body { padding: 15px; }
 }
+/* Duygu Efektleri */
+.particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 999;
+    animation: particleFall linear forwards;
+}
+
+/* Olumlu - Çiçek/Parçacık */
+.particle-positive {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    animation: particleFloat 2s ease-out forwards;
+}
+
+/* Olumsuz - Yağmur */
+.particle-negative {
+    width: 2px;
+    height: 15px;
+    border-radius: 2px;
+    background: rgba(150, 180, 255, 0.5);
+    animation: particleRain linear forwards;
+}
+
+/* Nötr - Hafif */
+.particle-neutral {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(199, 125, 255, 0.3);
+    animation: particleFloat 3s ease-in-out forwards;
+}
+
+@keyframes particleFloat {
+    0%   { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-200px) scale(0); opacity: 0; }
+}
+
+@keyframes particleRain {
+    0%   { transform: translateY(-20px); opacity: 0.7; }
+    100% { transform: translateY(100vh); opacity: 0; }
+}
+
+/* Arka plan geçişleri */
+body.mood-positive {
+    background: radial-gradient(ellipse at top left, #2d0a4e, #1a0533 60%, #0d001a),
+                radial-gradient(ellipse at bottom right, rgba(255, 200, 100, 0.1), transparent);
+    transition: background 1s ease;
+}
+
+body.mood-negative {
+    background: radial-gradient(ellipse at top, #0a0a2e, #1a0533 60%, #0d001a);
+    transition: background 1s ease;
+}
+
+body.mood-neutral {
+    background: radial-gradient(ellipse at top left, #2d0a4e, #1a0533 60%, #0d001a);
+    transition: background 1s ease;
+}
