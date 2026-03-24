@@ -19,7 +19,7 @@ Demo Video: (yakında eklenecek)
 - CSS3
 - Vanilla JavaScript
 - Groq API (LLaMA 3.3)
-- Netlify Functions
+- Vercel Functions
 
 ## Nasıl Çalışır?
 1. Nasıl hissettiğini yaz
