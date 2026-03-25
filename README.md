@@ -11,8 +11,8 @@ karşılık veren, ruh haline özel şiir ve renk paleti üreten,
 küçük bir aktivite öneren dijital bir dost.
 
 ## Canlı Demo
-Yayın Linki: https://fluffy-jalebi-caecce.netlify.app
-Demo Video: (yakında eklenecek)
+Yayın Linki: https://lucky-cyan-three.vercel.app/
+Demo Video: https://www.loom.com/share/c0ac67bf69eb411d8acdf4e8d7503635
 
 ## Kullanılan Teknolojiler
 - HTML5
