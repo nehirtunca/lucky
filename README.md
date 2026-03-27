@@ -25,6 +25,11 @@ Demo Video: https://www.loom.com/share/c0ac67bf69eb411d8acdf4e8d7503635
 - Groq API (LLaMA 3.3)
 - Vercel Functions
 - n8n (Geri bildirim otomasyonu)
+- ChatGPT 
+- Claude
+- Google Gemini
+- VS Code AI Chatbot
+- Perplexity
 
 ## Nasıl Çalışır?
 1. Nasıl hissettiğini yaz
