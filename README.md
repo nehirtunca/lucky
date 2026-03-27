@@ -15,6 +15,7 @@ alıyor — koşulsuz, yargılamadan, her zaman yanımda olan Lucky'den.
 
 ## Canlı Demo
 Yayın Linki: https://lucky-cyan-three.vercel.app/
+
 Demo Video: https://www.loom.com/share/c0ac67bf69eb411d8acdf4e8d7503635
 
 ## Kullanılan Teknolojiler
